@@ -32,10 +32,6 @@
 	"lint-staged": {
 		"{*.css,*.scss}": [
 			"npm run lint-css:fix"
-		],
-		"*.php": [
-			"composer format",
-			"npm run lint-php"
 		]
 	},
 	"volta": {
