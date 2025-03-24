@@ -5,16 +5,39 @@
 	"version": "0.1.0",
 	"title": "Term Meta Text",
 	"category": "widgets",
-	"icon": "smiley",
-	"description": "Example block scaffolded with Create Block tool.",
+	"icon": "megaphone",
+	"description": "タームメタの値を取得して表示するブロック",
 	"example": {},
+	"attributes": {
+		"taxonomy": {
+			"type": "string",
+			"default": ""
+		},
+		"termId": {
+			"type": "number",
+			"default": 0
+		},
+		"termMetaKey": {
+			"type": "string",
+			"default": ""
+		}
+	},
 	"supports": {
-		"html": false
+		"html": false,
+		"color": {
+			"text": true,
+			"background": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"fontFamily": true,
+			"appearance": true
+		}
 	},
 	"textdomain": "term-meta-text-block",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
-	"render": "file:./render.php",
-	"viewScript": "file:./view.js"
+	"render": "file:./render.php"
 }

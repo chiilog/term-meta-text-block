@@ -1,9 +1,13 @@
 /**
- * The following styles get applied inside the editor only.
+ * エディター用のスタイル
  *
- * Replace them with your own styles or remove the file completely.
+ * ブロックエディター内でのみ適用されるスタイル
  */
 
 .wp-block-chiilog-term-meta-text-block-term-meta-text-block {
-	border: 1px dotted #f00;
+	padding: 10px 15px;
+	background: rgba(0, 0, 0, 0.02);
+	border: 1px dashed #ccc;
+	border-radius: 4px;
+	font-style: italic;
 }
