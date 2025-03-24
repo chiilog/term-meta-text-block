@@ -4,7 +4,6 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
-import type { BlockConfiguration } from '@wordpress/blocks';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -19,14 +18,14 @@ import './style.scss';
  * Internal dependencies
  */
 import Edit from './edit';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const metadata = require( './block.json' );
+import metadata from './block.json';
 
 /**
  * Every block starts by registering a new block type definition.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
+//@ts-ignore
 registerBlockType( metadata.name, {
 	/**
 	 * @see ./edit.tsx

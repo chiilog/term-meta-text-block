@@ -4,36 +4,21 @@
  * タクソノミー、ターム、タームメタキーを選択し、対応するタームメタの値を表示するブロックの編集インターフェース
  */
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import type { StoreDescriptor } from '@wordpress/data';
 import { store as coreDataStore } from '@wordpress/core-data';
+import type { BlockEditProps } from '@wordpress/blocks';
+import type {
+	WP_REST_API_Taxonomy as RestTaxonomy,
+	WP_REST_API_Term as RestTerm,
+} from 'wp-types';
 import './editor.scss';
-
-/**
- * WordPress タクソノミーの型定義
- */
-interface Taxonomy {
-	slug: string;
-	name: string;
-	[ key: string ]: any;
-}
-
-/**
- * WordPress タームの型定義
- */
-interface Term {
-	id: number;
-	name: string;
-	[ key: string ]: any;
-}
 
 /**
  * ブロック属性の型定義
  */
-interface TermMetaTextBlockAttributes {
+interface BlockAttributes {
 	taxonomy: string;
 	termId: number;
 	termMetaKey: string;
@@ -42,22 +27,16 @@ interface TermMetaTextBlockAttributes {
 /**
  * タームメタテキストブロックの編集コンポーネント
  *
- * @param {Object} props - コンポーネントのプロパティ
- * @param {TermMetaTextBlockAttributes} props.attributes - ブロック属性
- * @param {Function} props.setAttributes - 属性を更新する関数
+ * @param {BlockEditProps<BlockAttributes>} props - ブロック編集用のプロパティ
  * @return {JSX.Element} 編集画面のコンポーネント
  */
-export default function Edit( {
-	attributes,
-	setAttributes,
-}: {
-	attributes: TermMetaTextBlockAttributes;
-	setAttributes: ( attrs: Partial< TermMetaTextBlockAttributes > ) => void;
-} ) {
+export default function Edit( props: BlockEditProps< BlockAttributes > ) {
+	const { attributes, setAttributes } = props;
 	const { taxonomy, termId, termMetaKey } = attributes;
 
 	// タクソノミーの一覧を取得
-	const taxonomies = useSelect< Taxonomy[] | undefined >( ( select ) => {
+	// @ts-ignore
+	const taxonomies = useSelect( ( select ) => {
 		const taxonomyEntities = select( coreDataStore ).getTaxonomies( {
 			per_page: -1,
 		} );
@@ -65,7 +44,8 @@ export default function Edit( {
 	}, [] );
 
 	// 選択されたタクソノミーに属するタームの一覧を取得
-	const terms = useSelect< Term[] | undefined >(
+	// @ts-ignore
+	const terms = useSelect(
 		( select ) => {
 			if ( ! taxonomy ) {
 				return [];
@@ -82,22 +62,15 @@ export default function Edit( {
 		[ taxonomy ]
 	);
 
-	// タクソノミーが変更された時にtermIdをリセット
-	useEffect( () => {
-		if ( termId !== 0 ) {
-			setAttributes( { termId: 0 } );
-		}
-	}, [ taxonomy, termId ] );
-
 	// ブロックプロパティを取得
 	const blockProps = useBlockProps();
 
 	// 表示用のデータ
 	const selectedTaxonomyName =
-		taxonomies?.find( ( tax: Taxonomy ) => tax?.slug === taxonomy )?.name ||
-		taxonomy;
+		taxonomies?.find( ( tax: RestTaxonomy ) => tax?.slug === taxonomy )
+			?.name || taxonomy;
 	const selectedTermName =
-		terms?.find( ( term: Term ) => term?.id === termId )?.name ||
+		terms?.find( ( term: RestTerm ) => term?.id === termId )?.name ||
 		`ID: ${ termId }`;
 
 	/**
@@ -107,7 +80,8 @@ export default function Edit( {
 	 */
 	const displayMessage =
 		taxonomy && termId && termMetaKey
-			? __(
+			? // translators: %1$s: タクソノミー名, %2$s: ターム名, %3$s: メタキー名
+			  __(
 					'Taxonomy: %1$s / Term: %2$s / Key: %3$s の内容が表示されます',
 					'term-meta-text-block'
 			  )
@@ -133,14 +107,17 @@ export default function Edit( {
 								value: '',
 							},
 							...( taxonomies || [] ).map(
-								( tax: Taxonomy ) => ( {
+								( tax: RestTaxonomy ) => ( {
 									label: tax.name,
 									value: tax.slug,
 								} )
 							),
 						] }
 						onChange={ ( value ) =>
-							setAttributes( { taxonomy: value } )
+							setAttributes( {
+								taxonomy: value,
+								termId: 0, // タクソノミー変更時にtermIdをリセット
+							} )
 						}
 					/>
 
@@ -157,10 +134,12 @@ export default function Edit( {
 									),
 									value: '0',
 								},
-								...( terms || [] ).map( ( term: Term ) => ( {
-									label: term.name,
-									value: String( term.id ),
-								} ) ),
+								...( terms || [] ).map(
+									( term: RestTerm ) => ( {
+										label: term.name,
+										value: String( term.id ),
+									} )
+								),
 							] }
 							onChange={ ( value ) =>
 								setAttributes( {
