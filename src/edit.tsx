@@ -137,6 +137,7 @@ export default function Edit( props: BlockEditProps< BlockAttributes > ) {
 								...( terms || [] ).map(
 									( term: RestTerm ) => ( {
 										label: term.name,
+										// SelectControlのvalueは文字列である必要があるため、数値を文字列に変換
 										value: String( term.id ),
 									} )
 								),
