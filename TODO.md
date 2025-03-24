@@ -10,7 +10,27 @@
 
     -   @types/wordpress\_\_block-editor
     -   @types/wordpress\_\_blocks
+        -   Edit: `BlockEditProps`
     -   wp-types
+        -   taxonomy: `WP_REST_API_Taxonomy`
+        -   term: `WP_REST_API_Term`
+
+また、以下のコンポーネントは型定義がありませんので、TypeScriptのエラーを解消しようとせず、 `@ts-ignore` で無視してください。
+
+-   `registerBlockType`
+-   `useSelect`
+
+以下のWordPress関数のphpcsは無視してください
+
+-   get_block_wrapper_attributes() - WordPress.Security.EscapeOutput.OutputNotEscaped
+
+コードの生成が終わったら、Lintを実行してください。
+
+-   npm run lint-js
+-   npm run lint-css
+-   npm run lint-php
+
+Lintのエラーが出ていれば解消してください。
 
 ## 2. block.json の設定
 
@@ -44,9 +64,10 @@
 -   **ターム**
     -   指定されたタクソノミーに紐づくタームをセレクトボックスで選択
     -   タクソノミーが未選択の場合は非表示
-    -   タクソノミーが変更された場合は選択を初期化
+    -   タクソノミーが変更された場合は`termId`を`'0'`にする
 -   **タームメタキー**
     -   テキストボックスで自由入力
+    -   値は文字列で固定。配列やオブジェクト等、文字列以外が入った時は処理しない。
 
 ## 4. 表示仕様
 
@@ -65,3 +86,4 @@
 -   `<p>`で、指定されたタームIDとメタキーに対応する **タームメタの値** を表示してください
 -   supports によるスタイル設定（色・フォント等）がフロントでも反映されるようにしてください
 -   タームメタの取得・出力は render.php で行い、サーバーサイドレンダリングで表示してください
+-   未入力の場合は、フロント側では`<p>`を含めて何も出力しない

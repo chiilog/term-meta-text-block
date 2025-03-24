@@ -30,6 +30,12 @@
 		"wp-types": "^4.67.0"
 	},
 	"lint-staged": {
+		"*.{js,json,ts,tsx}": [
+			"npm run format"
+		],
+		"*.{js,ts,tsx}": [
+			"npm run lint-js:fix"
+		],
 		"{*.css,*.scss}": [
 			"npm run lint-css:fix"
 		],

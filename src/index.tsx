@@ -25,9 +25,10 @@ import metadata from './block.json';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
+//@ts-ignore
 registerBlockType( metadata.name, {
 	/**
-	 * @see ./edit.js
+	 * @see ./edit.tsx
 	 */
 	edit: Edit,
 } );

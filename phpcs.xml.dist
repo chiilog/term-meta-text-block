@@ -3,7 +3,7 @@
 	<!-- What to scan -->
 	<ini name="error_reporting" value="E_ALL &#38; ~E_DEPRECATED" />
 
-	<file>./src/**/*.php</file>
+	<file>./src/render.php</file>
 	<exclude-pattern>/build/</exclude-pattern>
 	<exclude-pattern>/vendor/</exclude-pattern>
 	<exclude-pattern>node_modules</exclude-pattern>
