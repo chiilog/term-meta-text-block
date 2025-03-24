@@ -20,6 +20,18 @@
 -   `registerBlockType`
 -   `useSelect`
 
+以下のWordPress関数のphpcsは無視してください
+
+-   get_block_wrapper_attributes() - WordPress.Security.EscapeOutput.OutputNotEscaped
+
+コードの生成が終わったら、Lintを実行してください。
+
+-   npm run lint-js
+-   npm run lint-css
+-   npm run lint-php
+
+Lintのエラーが出ていれば解消してください。
+
 ## 2. block.json の設定
 
 ### 2.1 attributes
